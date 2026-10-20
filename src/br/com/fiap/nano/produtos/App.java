@@ -34,6 +34,7 @@ public class App {
 
     private static void consultarprodutoporcategoria() {
         Categoria categoria = CategoriaView.select(null);
+        if (categoria == null) return; // cancelou
         List<Produto> produtos = ProdutoCollectionRepository.findByCategoria(categoria);
         if (produtos.size() == 0)
             JOptionPane.showMessageDialog(null, "Não encontramos produtos cadastrados para a categoria " + categoria.getNome());
@@ -44,11 +45,14 @@ public class App {
     private static void consultarprodutoporid() {
         Long id = 0l;
         do {
+            String entrada = JOptionPane.showInputDialog("Informe o id do produto");
+            if (entrada == null) return; // cancelou
             try {
-                id = Long.parseLong(JOptionPane.showInputDialog("Informe o id do produto"));
+                id = Long.parseLong(entrada.trim());
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Id inválido!");
+                id = 0l;
             }
+            if (id <= 0) JOptionPane.showMessageDialog(null, "Id inválido!");
 
         } while (id <= 0);
 
@@ -62,19 +66,28 @@ public class App {
 
     private static void alterarproduto() {
         Produto produto = ProdutoView.select();
+        if (produto == null) return; // cancelou
         ProdutoView.update(produto);
     }
 
     private static void cadastrarproduto() {
         Produto produto = ProdutoView.form();
-        ProdutoCollectionRepository.save(produto);
+        if (produto == null) return; // cancelou
+        if (ProdutoCollectionRepository.save(produto) == null) { // save retorna null quando o produto já existe
+            JOptionPane.showMessageDialog(null, "Produto " + produto.getNome().toUpperCase() + " já cadastrado na categoria " + produto.getCategoria() + "!");
+            return;
+        }
         ProdutoView.sucesso(produto);
     }
 
     public static void cadastrarCategoria() {
         CategoriaView view = new CategoriaView();
         Categoria categoria = view.form();
-        CategoriaCollectionRepository.save(categoria);
+        if (categoria == null) return; // cancelou
+        if (CategoriaCollectionRepository.save(categoria) == null) { // save retorna null quando a categoria já existe
+            JOptionPane.showMessageDialog(null, "Categoria " + categoria.getNome().toUpperCase() + " já cadastrada!");
+            return;
+        }
         view.sucesso(categoria);
     }
 

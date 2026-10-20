@@ -2,6 +2,7 @@ package br.com.fiap.nano.produtos.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Produto {
@@ -96,11 +97,14 @@ public class Produto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Produto produto = (Produto) o;
-        return nome.equals(produto.nome) && categoria.equals(produto.categoria);
+        // mesmo nome (sem diferenciar maiúsculas) na mesma categoria = mesmo produto
+        boolean mesmoNome = nome == null ? produto.nome == null : nome.equalsIgnoreCase(produto.nome);
+        return mesmoNome && Objects.equals(categoria, produto.categoria);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nome, categoria);
+        // precisa seguir a mesma regra do equals
+        return Objects.hash(nome == null ? null : nome.toLowerCase(Locale.ROOT), categoria);
     }
 }

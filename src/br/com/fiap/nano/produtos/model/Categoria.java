@@ -1,5 +1,6 @@
 package br.com.fiap.nano.produtos.model;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class Categoria {
@@ -46,11 +47,13 @@ public class Categoria {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Categoria categoria = (Categoria) o;
-        return Objects.equals(getNome(), categoria.getNome());
+        // compara o nome sem diferenciar maiúsculas de minúsculas ("livros" = "Livros")
+        return getNome() == null ? categoria.getNome() == null : getNome().equalsIgnoreCase(categoria.getNome());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getNome());
+        // precisa seguir a mesma regra do equals
+        return Objects.hash(getNome() == null ? null : getNome().toLowerCase(Locale.ROOT));
     }
 }

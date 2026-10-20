@@ -23,7 +23,18 @@ public class CategoriaView {
     }
 
     public static Categoria form() {
-        String nome = JOptionPane.showInputDialog("Informe o nome da Categoria");
+        String nome = "";
+
+        do {
+            nome = JOptionPane.showInputDialog("Informe o nome da Categoria");
+            if (nome == null) return null; // cancelou
+
+            nome = nome.trim();
+            if (nome.isEmpty())
+                JOptionPane.showMessageDialog(null, "O nome da categoria não pode ficar em branco");
+
+        } while (nome.isEmpty());
+
         return new Categoria(nome);
     }
 
