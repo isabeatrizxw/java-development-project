@@ -1,0 +1,8 @@
+# Saída de compilação (IntelliJ e javac)
+out/
+out-test/
+*.class
+
+# Configurações pessoais do IntelliJ
+.idea/workspace.xml
+.idea/shelf/
